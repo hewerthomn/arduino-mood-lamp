@@ -12,6 +12,9 @@ this stuff is worth it, you can buy me a beer in return Poul-Henning Kamp
 #define pinGreen 10
 #define pinBlue 9
 
+const int numReadings = 10;
+const int thresholdLDR = 800;
+
 float RGB1[3];
 float RGB2[3];
 float INC[3];
@@ -42,9 +45,8 @@ void setup()
 
 void loop()
 {
-  randomSeed(analogRead(1));  
-  ambientLight = analogRead(pinLDR);
-    
+  readLDR();
+      
   for(int x=0; x<3; x++)
   {
     INC[x] = (RGB1[x] - RGB2[x]) / 256;
@@ -56,12 +58,12 @@ void loop()
     green = int(RGB1[1]);
     blue = int(RGB1[2]);
     
-    if(ambientLight > 600)
+    if(ambientLight > thresholdLDR)
     {   
       analogWrite(pinRed, red);
       analogWrite(pinGreen, green);
       analogWrite(pinBlue, blue);
-      delay(50);
+      delay(30);
     }
     else
     {
@@ -79,6 +81,21 @@ void loop()
   {
     RGB2[x] = random(556) - 300;
     RGB2[x] = constrain(RGB2[x], 0, 255);
-    delay(200);
+    delay(50);
   }
+}
+
+void readLDR()
+{
+  int total = 0;
+  int average = 0;
+  int thisReading = 0;
+
+  for (int i = 0; i < numReadings; i++) {
+    thisReading = analogRead(pinLDR);
+    total = total + thisReading;
+  }
+  
+  ambientLight = total / numReadings;
+  delay(1);
 }
