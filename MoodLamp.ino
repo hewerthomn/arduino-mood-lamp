@@ -63,7 +63,7 @@ void loop()
       analogWrite(pinRed, red);
       analogWrite(pinGreen, green);
       analogWrite(pinBlue, blue);
-      delay(30);
+      delay(200);
     }
     else
     {
